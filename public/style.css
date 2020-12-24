@@ -1,0 +1,206 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  border: 0px;
+  background-color: whitesmoke;
+  margin: 0;
+  padding: 0;
+}
+
+#usercontrol {
+}
+
+#title {
+  padding: 20px;
+}
+
+#usr {
+  padding: 10px;
+}
+
+.navbutton {
+  background-color:#008CBA; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+#mysnippetsbtn {
+  visibility: hidden;
+}
+
+#author {
+  margin: 10px;
+  font-style: italic;
+}
+
+pre {
+  counter-reset: line;
+
+}
+
+#hashtag {
+  margin: 10px;
+  color:red;
+}
+
+#name {
+  margin: 10px;
+  font-size: 22pt;
+}
+.form{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.spacerhor {
+  height: 20px;
+}
+
+.row {
+  margin-top: 20px;
+}
+
+.centred {
+  display: flex;
+  justify-content: center;
+}
+
+.loginbtn{
+  padding: 4px 4px;
+  margin: 2px 2px;
+  border: none;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  background-color:orange;
+}
+
+#footer {
+  color: white;
+  display: flex;
+  justify-content: flex-end;
+  background-color: black;
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+}
+
+.spacer {
+  width: 20px;
+}
+
+#addbtn {
+  color: white;
+  font-size: 16px;
+  padding: 15px 32px;
+  margin: 4px 2px;
+  border: none;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  background-color:green;
+}
+#codefield {
+  width: 80%;
+}
+#savebtn {
+  color: white;
+  font-size: 16px;
+  padding: 15px 32px;
+  margin: 4px 2px;
+  border: none;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  background-color:green;
+}
+
+#cancelbtn {
+  color: white;
+  font-size: 16px;
+  padding: 15px 32px;
+  margin: 4px 2px;
+  border: none;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  background-color:darkgoldenrod;
+}
+
+#deletebtn {
+  color: white;
+  font-size: 16px;
+  padding: 15px 32px;
+  margin: 4px 2px;
+  border: none;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  background-color:red;
+}
+
+#viewbtn {
+  padding: 4px 4px;
+  margin: 2px 2px;
+  border: none;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  background-color:lightyellow;
+}
+
+#editbtn {
+  padding: 4px 4px;
+  margin: 2px 2px;
+  border: none;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  background-color:lightblue;
+}
+
+.padded {
+  padding: 20px;
+}
+
+.singlerow{
+  padding: 10px
+}
+
+main {
+  padding: 40px;
+}
+
+#content {
+  display: flex;
+  justify-content: space-evenly;
+  padding: 40px;
+}
+
+#content {
+  display: flex;
+  flex-direction: column;
+  padding: 40px;
+}
+
+nav {
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+header {
+  background-color: black;
+  color: antiquewhite;
+}

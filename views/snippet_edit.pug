@@ -1,0 +1,63 @@
+extends layout
+
+
+block layout-content
+  main
+    div.form
+      label name
+      input(type="text", id="namefield" value=name) 
+      label code
+      textarea(name="", id="codefield", cols="30", rows="10") #{body} 
+      p by #{author}
+  div#control.centred
+    button#savebtn(onclick="save('"+id+"')") save
+    button#cancelbtn(onclick="window.location = '/my_snippets'") cancel
+  script.
+    const save = (id) => {
+      const name = namefield.value
+      const code = codefield.value
+      const url = window.location.toString()
+      //- const id = url.substring(url.lastIndexOf('/') + 1)
+      //- console.log(id.length())
+      //- console.log(id.length)
+      if (id.length === 24){
+        fetch('/edit_snippet', {
+          method: 'POST', 
+          headers: {
+            'Content-Type': 'application/json'
+          }, 
+          body : JSON.stringify({id:id, name: name, code: code})
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data) {
+            if (data.st === "OK") {
+              window.alert("SNIPPET UPDATED!")
+              window.location = "/my_snippets"
+            } else {
+              window.alert("ERROR! SNIPPED NOT UPDATED")
+            }
+          }
+        })
+      } else {
+        fetch('/add_snippet', {
+        method: 'POST', 
+        headers: {
+          'Content-Type': 'application/json'
+        }, 
+        body : JSON.stringify({name: name, code: code})
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data) {
+            if (data.st === "OK") {
+              window.alert("SNIPPET SAVED!")
+              window.location = "/my_snippets"
+            } else {
+              window.alert("ERROR! SNIPPED NOT SAVED")
+            }
+          }
+        })
+      }
+    }
+     

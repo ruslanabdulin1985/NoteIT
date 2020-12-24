@@ -1,0 +1,11 @@
+extends layout
+
+block layout-content
+  main
+    h1 #{name}
+    pre
+      code #{body}
+    p by #{author}
+  div#control.centred
+    if deleteStatus === "YES"
+      button#deletebtn(onclick="location.href='/delete_snippet/"+id+"'") delete

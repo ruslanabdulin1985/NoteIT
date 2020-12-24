@@ -1,0 +1,74 @@
+block variables
+doctype html
+html
+  head
+    meta(charset="utf-8")
+    link(rel="shortcut icon", href="/favicon.ico")
+    meta(name="viewport", content="width=device-width, initial-scale=1, shrink-to-fit=no")
+    meta(name="theme-color", content="#000000")
+    title #{title} | SNIPPETS MAIN PAGE
+    style
+      include ../public/style.css
+  body    
+    div#root
+      header
+        div#title
+          h1 Snippet 
+            i IT
+            |!
+        nav#navbar
+          div#navigation
+            button.navbutton(onclick='window.location="/snippets"') All Snippets
+            button#mysnippetsbtn.navbutton(onclick='window.location="/my_snippets"') My Snippets
+          div#usercontrol
+            label#usr
+         
+        script.
+          // This script is to display current username in navbar and show/hide log out button
+          const usercontrol = document.getElementById('usercontrol')
+          
+          //-  p
+          //-   strong This Starts out strong 
+          //-   |  but finishes out not 
+          //-   i  quite 
+          //-   |  as bold.
+          
+          fetch('/get_user', {method: 'GET'})
+          .then(resp => resp.json())
+          .then(data=>{
+            if (data.usr) {
+              const el = document.getElementById('usr')
+              
+
+              if (data.usr !== 'none'){
+                var logOut = document.createElement("BUTTON")
+                logOut.innerText = 'Log Out'
+                logOut.onclick = () => {window.location = "/login"}
+                logOut.className = "loginbtn"          
+                usercontrol.append(logOut)
+                el.innerText = data.usr
+                mySnippetsBtn = document.getElementById("mysnippetsbtn")
+                mySnippetsBtn.style.visibility  = "visible"
+              }
+              else {
+                var logIn = document.createElement("BUTTON")
+                logIn.innerText = 'Log In'
+                logIn.onclick = () => {window.location = "/login"}
+                logIn.className = "loginbtn" 
+                usercontrol.append(logIn)
+                el.innerText = ''
+                var reg = document.createElement("BUTTON")
+                reg.innerText = 'Register'
+                reg.onclick = () => {window.location = "/register"}
+                reg.className = "loginbtn" 
+                usercontrol.append(reg)
+              }
+            }
+          })
+ 
+    block layout-content
+    div.spacerhor
+    div#footer
+      p Created by Ruslan Abdulin 2020    
+      div.spacer
+        

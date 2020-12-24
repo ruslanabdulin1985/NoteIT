@@ -1,0 +1,17 @@
+extends layout
+
+block layout-content
+  main 
+    div.centred
+      h1 All sinppets
+    div.centred.padded
+      div#list
+        ul
+        each val in snippets.length ? snippets : ['There are no snippets']
+            //- li= val.name
+            p.singlerow
+              label#name #{val.name} 
+              //- a(href="/snippets/"+val.name) #{val.name} 
+              label#author by #{val.user}
+              label#hashtag #
+              button#viewbtn(onclick='window.location="/snippets/'+val._id+'"') VIEW
