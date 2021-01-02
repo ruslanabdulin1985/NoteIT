@@ -5,7 +5,9 @@ const users = require('./users')
 const session = require('express-session')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
+const configIni = require('config.ini')
 
+let config = configIni.load('./config.ini')
 const app = express()
 const PORT = process.env.PORT || 5000
 
@@ -18,10 +20,10 @@ app.use('/', require('./routes/controller'))
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'pug')
 
-// app.get('/', function (req, res) {
-//   res.send('Hello World')
-// })
 
-db.init()
+db.init(config)
 users.init()
+
+// db.create()
+
 app.listen(PORT, () => console.log(`server is running on ${PORT}`))

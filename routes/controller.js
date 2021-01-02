@@ -11,28 +11,34 @@ router.get('/', (req, res) => {
   res.render('index', { title: 'home', name: 'main' })
 })
 
-router.get('/snippets', async (req, res) => {
+router.get('/notes', async (req, res) => {
   let snippets = []
   snippets = await db.findAll({})
-  res.render('all_snippets', { title: 'Snippets', snippets: snippets })
+  res.render('all_notes', { title: 'Snippets', snippets: snippets })
 })
 
-router.get('/my_snippets', async (req, res) => {
+router.get('/my_notes', async (req, res) => {
   if (req.session.user) {
-    let snippets = []
-    snippets = await db.findAll({ user: req.session.user })
-    res.render('my_snippets', { title: 'Snippets', snippets: snippets.reverse() })
-  } else { res.render('error', { error: 'User Not Found' }) }
+    let notes = await db.getMyNotes()
+    res.render('my_notes', { title: 'Notes', notes: notes.reverse() })
+  }
 })
 
-router.post('/add_snippet', async (req, res) => {
+router.get('/shared_notes', async (req, res) => {
   if (req.session.user) {
-    await db.create(req.body.name, req.body.code, req.session.user, [])
+    let notes = await db.getSharedNotes(1)
+    res.render('shared_notes', { title: 'Notes', notes: notes.reverse() })
+  }
+})
+
+router.post('/add_note', async (req, res) => {
+  if (req.session.user) {
+    await db.createNote(req.body.name, req.body.body, req.session.user, req.session.category)
     res.send({ st: 'OK' })
   } else { res.send({ st: 'FAIL' }) }
 })
 
-router.post('/edit_snippet', async (req, res) => {
+router.post('/edit_note', async (req, res) => {
   if (req.session.user) {
     // console.log(req.body.id, req.body.name, req.body.code)
     await db.update(req.body.id, req.body.name, req.body.code, req.session.user, [])
@@ -47,29 +53,37 @@ router.post('/reg', async (req, res) => {
     } else {
       users.createUsr(req.body.username, req.body.password)
       req.session.user = req.body.username
-      res.redirect(301, '/my_snippets')
+      res.redirect(301, '/my_notes')
     }
   })
 })
 
-router.get('/delete_snippet/:id', async (req, res) => {
+router.get('/delete_note/:id', async (req, res) => {
   await db.deleteOne(req.params.id)
-  res.redirect(301, '/my_snippets')
+  res.redirect(301, '/my_notes')
 })
 
 router.post('/auth', async (req, res) => {
-  const isAuthorized = await users.auth(req.body.username, req.body.password)
-  await users.find(req.body.username).then(foundUser => {
-    if (foundUser && isAuthorized) {
-      req.session.user = foundUser.user
-      res.redirect(301, '/my_snippets')
-      // res.send({url:'/homepage'})
-    } else {
-      req.session.user = null
-      res.redirect(301, '/my_snippets')
-      // res.status(400).send('Bad Request')
-    }
-  })
+  const isAuthorized = await db.auth(req.body.username, req.body.password)
+  if (isAuthorized) {
+    req.session.user = req.body.username
+    res.redirect(301, '/my_notes')
+  } else {
+    req.session.user = null
+    res.redirect(301, '/')
+  }
+    
+  // await db.findUser(req.body.username).then(foundUser => {
+  //   if (foundUser && isAuthorized) {
+  //     req.session.user = foundUser.user
+  //     res.redirect(301, '/my_notes')
+  //     // res.send({url:'/homepage'})
+  //   } else {
+  //     req.session.user = null
+  //     res.redirect(301, '/my_notes')
+  //     // res.status(400).send('Bad Request')
+  //   }
+  // })
 
   // console.log('auth ' + req.session.user)
 })
@@ -95,7 +109,7 @@ router.get('/get_current_user', async (req, res) => {
   res.json({ user: 'RR' }) // req.session.user
 })
 
-router.get('/snippet/edit/:id', async (req, res) => {
+router.get('/note/edit/:id', async (req, res) => {
   // const [snippetName, authorName, snippetBody] = ['', '', '']
   if (req.session.user && req.params.id.length === 24) {
     await db.find(req.params.id).then(r => {
@@ -104,9 +118,9 @@ router.get('/snippet/edit/:id', async (req, res) => {
         const snippetName = r.name
         const authorName = r.user
         const snippetBody = r.body
-        res.render('snippet_edit', { title: 'snippet', id: snippetId, name: snippetName, author: authorName, body: snippetBody })
+        res.render('note_edit', { title: 'snippet', id: snippetId, name: snippetName, author: authorName, body: snippetBody })
       } else {
-        res.render('error', { error: 'SNIPPET NOT FOUND' })
+        res.render('error', { error: 'NOTE NOT FOUND' })
       }
     })
   } else { res.render('error', { error: 'EDITING FORBIDEN FOR NOT REGISTRED USERS' }) }
@@ -116,13 +130,13 @@ router.get('/register', async (req, res) => {
   res.render('register')
 })
 
-router.get('/snippet/add', async (req, res) => {
+router.get('/note/add', async (req, res) => {
   if (req.session.user) {
-    res.render('snippet_edit', { title: 'snippet add', author: req.session.user })
+    res.render('note_edit', { title: 'note add', author: req.session.user })
   } else { res.render('login') }
 })
 
-router.get('/snippets/:id', async (req, res) => {
+router.get('/notes/:id', async (req, res) => {
   // const [snippetName, authorName, snippetBody] = ['', '', '']
   if (req.params.id.length === 24) {
     await db.find(req.params.id).then(r => {
@@ -135,12 +149,12 @@ router.get('/snippets/:id', async (req, res) => {
         const snippetName = r.name
         const authorName = r.user
         const snippetBody = r.body
-        res.render('snippet', { title: 'snippet', name: snippetName, author: authorName, body: snippetBody, id: snippetId, deleteStatus: deleteStatus })
+        res.render('note', { title: 'snippet', name: snippetName, author: authorName, body: snippetBody, id: snippetId, deleteStatus: deleteStatus })
       } else {
-        res.render('error', { error: 'SNIPPET NOT FOUND' })
+        res.render('error', { error: 'NOTE NOT FOUND' })
       }
     })
-  } else { res.render('error', { error: 'SNIPPET NOT FOUND' }) }
+  } else { res.render('error', { error: 'NOTE NOT FOUND' }) }
 })
 
 module.exports = router
