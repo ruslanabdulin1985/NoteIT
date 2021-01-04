@@ -13,13 +13,14 @@ html
     div#root
       header
         div#title
-          h1 Note 
-            i IT
-            |!
+          a#titlelink(href='/')
+            h1 Note 
+              i IT
+              |!
         nav#navbar
           div#navigation
+            button.navbutton(onclick='window.location="/my_notes"') My Notes
             button.navbutton(onclick='window.location="/shared_notes"') Shared Notes
-            button#mysnippetsbtn.navbutton(onclick='window.location="/my_notes"') My Notes
           div#usercontrol
             label#usr
          
@@ -27,19 +28,11 @@ html
           // This script is to display current username in navbar and show/hide log out button
           const usercontrol = document.getElementById('usercontrol')
           
-          //-  p
-          //-   strong This Starts out strong 
-          //-   |  but finishes out not 
-          //-   i  quite 
-          //-   |  as bold.
-          
           fetch('/get_user', {method: 'GET'})
           .then(resp => resp.json())
           .then(data=>{
             if (data.usr) {
-              const el = document.getElementById('usr')
-              
-
+              const el = document.getElementById('usr')              
               if (data.usr !== 'none'){
                 var logOut = document.createElement("BUTTON")
                 logOut.innerText = 'Log Out'
@@ -47,8 +40,11 @@ html
                 logOut.className = "loginbtn"          
                 usercontrol.append(logOut)
                 el.innerText = data.usr
-                mySnippetsBtn = document.getElementById("mysnippetsbtn")
-                mySnippetsBtn.style.visibility  = "visible"
+                const navBtns = document.getElementsByClassName("navbutton")
+                for(let btn of navBtns){
+                  btn.style.visibility  = "visible"
+                }
+                  
               }
               else {
                 var logIn = document.createElement("BUTTON")

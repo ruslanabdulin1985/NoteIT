@@ -1,0 +1,47 @@
+extends layout
+
+block layout-content
+  main
+    h1 NOTE TO SHARE:
+    p.singlerow
+      label#name #{note.namenotes} 
+      //- a(href="/snippets/"+val.name) #{val.name} 
+      label#author by #{note.nameusers}
+      label#hashtag ##{note.category}
+
+    h1 USERS TO SHARE WITH:
+    each val in users
+      //- li= val.name
+      p.singlerow
+        label#name #{val.nameusers}
+        //- a(href="/snippets/"+val.name) #{val.name} 
+        button#sharebtn(onclick="share('"+val.idusers +"','" +note.idnotes+"')") SHARE
+    else
+      p.singlerow
+        | There are no users to share with
+ 
+  script.
+    const share = (user, note) => {
+      //- console.log(user)
+      const idusers = user
+      const idnotes = note
+      console.log(idusers,idnotes)
+      fetch('/share_apply', {
+        method: 'POST', 
+        headers: {
+          'Content-Type': 'application/json'
+        }, 
+        body : JSON.stringify({idusers:idusers, idnotes: idnotes})
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data) {
+          if (data.st === "OK") {
+            window.alert("NOTE SHARED!")
+            window.location = "/my_notes"
+          } else {
+            window.alert("ERROR! NOTE NOT SHARED")
+          }
+        }
+      })
+    }

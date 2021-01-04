@@ -22,7 +22,7 @@ body {
 }
 
 .navbutton {
-  background-color:#008CBA; /* Green */
+  background-color:#008CBA; 
   border: none;
   color: white;
   padding: 15px 32px;
@@ -32,6 +32,7 @@ body {
   font-size: 16px;
   margin: 4px 2px;
   cursor: pointer;
+  visibility: hidden;
 }
 
 #mysnippetsbtn {
@@ -162,6 +163,25 @@ pre {
   background-color:lightyellow;
 }
 
+pre {
+  margin: 30px;
+  padding: 10px;
+}
+
+#text {
+  font-size: 25pt;
+}
+
+sharebtn {
+  padding: 4px 4px;
+  margin: 2px 2px;
+  border: none;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  background-color:wheat;  
+}
+
 #editbtn {
   padding: 4px 4px;
   margin: 2px 2px;
@@ -202,7 +222,12 @@ nav {
   justify-content: space-between;
 }
 
+#titlelink {
+  color: wheat;
+  text-decoration: none;
+}
+
 header {
-  background-color: black;
-  color: antiquewhite;
+  background-color: black ;
+  color: wheat;
 }

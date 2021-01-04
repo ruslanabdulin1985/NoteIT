@@ -18,8 +18,8 @@ const initialise = (config) => {
   })
 }
 
-const createNote = () => {
-  const note  = {bodynotes: 'test', authornotes: 1, category: 'home'}
+const createNote = (name, text, authorid, category) => {
+  const note  = {bodynotes: text, authornotes: authorid, namenotes:name, category: category}
   connection.query('INSERT INTO notes SET ?', note, (error, results, fields) => {
     if (error) throw error
   })
@@ -44,8 +44,18 @@ const auth = (username, password) => {
   })
 }
 
-const find = () => {
-  // find note
+const findNote = (id) => {
+  console.log(id)
+  return new Promise(resolve => {
+    connection.query('SELECT * FROM noteit.general_view WHERE idnotes = "' + id + '"', (error, results, fields) =>  {
+      if (error) 
+        throw error
+      if (results) {
+        resolve(results[0])
+      }
+      resolve([])
+    })
+  })  
 }
 
 
@@ -54,8 +64,24 @@ const findAll = () => {
 }
 
 
-const deleteOne = () => {
-  // delete a note
+const deleteNote = (idnotes) => {
+  return new Promise(resolve => {
+    connection.query('DELETE FROM noteit.notes WHERE idnotes = "'+idnotes+'"', function (error, results, fields) {
+      if (error) {
+        console.error(error);
+        resolve(false)
+      } else {
+        resolve(true)
+      } 
+    })
+  })
+}
+
+const insertShare = (idobject, idnote) => {
+  const permission  = {idnote: idnote, idobject: idobject, permission: 'read'}
+  connection.query('INSERT INTO permissions SET ?', permission, (error, results, fields) => {
+    if (error) throw error
+  })  
 }
 
 const update = () => {
@@ -67,13 +93,15 @@ const createUsr = () => {
 
 }
 
-const getMyNotes = (username) => {
+const getMyNotes = (userid) => {
   return new Promise(resolve => {
-    connection.query('SELECT nameusers, passwordusers FROM users WHERE nameusers = "' + username + '"', (error, results, fields) =>  {
-      if (error) 
+    connection.query(`SELECT * FROM noteit.general_view WHERE authornotes = '${userid}'`, (error, results, fields) =>  {
+      if (error) {
         throw error
-      else
-      resolve(results)
+        resolve([])
+      } else {
+        resolve(results)
+      }
     })
   })
 }
@@ -94,6 +122,7 @@ const getSharedNotes = (userid) => {
       if (error) 
         throw error
       else{
+
         console.log(results)
         resolve(results)
       }
@@ -102,18 +131,44 @@ const getSharedNotes = (userid) => {
   })
 }
 
+const getUsers = () => {
+  return new Promise(resolve => {
+    connection.query(`SELECT * FROM users`, (error, results, fields) =>  {
+      if (error) {
+        throw error
+      } else {
+        resolve(results)
+      }
+    })
+  })
+}
 
+const getUserIdByName = (username) => {
+  return new Promise(resolve => {
+    connection.query(`SELECT idusers FROM users WHERE nameusers = '${username}'`, (error, results, fields) =>  {
+      if (error) {
+        throw error
+      } else {
+        console.log(results[0])
+        resolve(results[0].idusers)
+      }
+    })
+  })
+}
 
 
 module.exports = {
   init: initialise,
-  find: find,
+  findNote: findNote,
   findAll: findAll,
-  deleteOne: deleteOne,
+  deleteNote: deleteNote,
   createUsr: createUsr,
   getMyNotes: getMyNotes,
   update: update,
   auth: auth,
   createNote: createNote,
-  getSharedNotes: getSharedNotes
+  getSharedNotes: getSharedNotes,
+  getUserIdByName: getUserIdByName,
+  getUsers: getUsers,
+  insertShare: insertShare
 }

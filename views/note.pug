@@ -4,8 +4,9 @@ block layout-content
   main
     h1 #{name}
     pre
-      code #{body}
+      code#text #{text}
+    label#hashtag ##{category}
     p by #{author}
   div#control.centred
     if deleteStatus === "YES"
-      button#deletebtn(onclick="location.href='/delete_snippet/"+id+"'") delete
+      button#deletebtn(onclick="location.href='/delete_note/"+id+"'") delete

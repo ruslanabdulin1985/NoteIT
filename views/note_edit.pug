@@ -6,8 +6,10 @@ block layout-content
     div.form
       label name
       input(type="text", id="namefield" value=name) 
-      label code
-      textarea(name="", id="codefield", cols="30", rows="10") #{body} 
+      label text
+      textarea(name="", id="codefield", cols="30", rows="10") #{body}
+      label category
+      textarea(name="", id="categoryfield", cols="30", rows="10") #{body} 
       p by #{author}
   div#control.centred
     button#savebtn(onclick="save('"+id+"')") save
@@ -15,46 +17,45 @@ block layout-content
   script.
     const save = (id) => {
       const name = namefield.value
-      const code = codefield.value
+      const text = codefield.value
       const url = window.location.toString()
-      //- const id = url.substring(url.lastIndexOf('/') + 1)
-      //- console.log(id.length())
-      //- console.log(id.length)
+      const category = categoryfield.value
+
       if (id.length === 24){
-        fetch('/edit_snippet', {
+        fetch('/edit_note', {
           method: 'POST', 
           headers: {
             'Content-Type': 'application/json'
           }, 
-          body : JSON.stringify({id:id, name: name, code: code})
+          body : JSON.stringify({id:id, name: name, text: text, category: category})
         })
         .then(response => response.json())
         .then(data => {
           if (data) {
             if (data.st === "OK") {
-              window.alert("SNIPPET UPDATED!")
-              window.location = "/my_snippets"
+              window.alert("NOTE UPDATED!")
+              window.location = "/my_notes"
             } else {
-              window.alert("ERROR! SNIPPED NOT UPDATED")
+              window.alert("ERROR! NOTE NOT UPDATED")
             }
           }
         })
       } else {
-        fetch('/add_snippet', {
+        fetch('/add_note', {
         method: 'POST', 
         headers: {
           'Content-Type': 'application/json'
         }, 
-        body : JSON.stringify({name: name, code: code})
+        body : JSON.stringify({name: name, text: text, category: category})
         })
         .then(response => response.json())
         .then(data => {
           if (data) {
             if (data.st === "OK") {
-              window.alert("SNIPPET SAVED!")
-              window.location = "/my_snippets"
+              window.alert("NOTE SAVED!")
+              window.location = "/my_notes"
             } else {
-              window.alert("ERROR! SNIPPED NOT SAVED")
+              window.alert("ERROR! NOTE NOT SAVED")
             }
           }
         })

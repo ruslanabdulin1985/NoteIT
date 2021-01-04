@@ -7,17 +7,18 @@ block layout-content
     div.centred.padded
       div
         div.centred
-          button#addbtn(onclick='window.location="/snippet/add"') ADD
+          button#addbtn(onclick='window.location="/note/add"') ADD
         ul#list
         each val in notes
           //- li= val.name
           p.singlerow
-            label#name #{val.name} 
+            label#name #{val.namenotes} 
             //- a(href="/snippets/"+val.name) #{val.name} 
-            label#author by #{val.user}
-            label#hashtag #
-            button#viewbtn(onclick='window.location="/snippets/'+val._id+'"') VIEW
-            button#editbtn(onclick='window.location="/snippet/edit/'+val._id+'"') EDIT
+            label#author by #{val.nameusers}
+            label#hashtag ##{val.category}
+            button#viewbtn(onclick='window.location="/notes/'+val.idnotes+'"') VIEW
+            button#editbtn(onclick='window.location="/notes/edit/'+val.idnotes+'"') EDIT
+            button#sharebtn(onclick='window.location="/notes/share/'+val.idnotes+'"') SHARE
         else
           p.singlerow
             | There are no notes
