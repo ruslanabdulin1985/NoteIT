@@ -57,15 +57,15 @@ router.post('/share_apply', async (req, res) => {
 
 
 router.post('/reg', async (req, res) => {
-  await users.find(req.body.username).then(foundUser => {
-    if (foundUser && foundUser.user === req.body.username) {
-      res.render('error', { error: 'SUCH USER EXIST' })
-    } else {
-      users.createUsr(req.body.username, req.body.password)
-      req.session.user = req.body.username
-      res.redirect(301, '/my_notes')
-    }
-  })
+  const usr = await db.getUserIdByName(req.body.username)
+  if (usr !== 'undefined') {
+    const creationresult = await db.createUsr(req.body.username, req.body.password)
+    req.session.user = req.body.username
+    req.session.userid = await db.getUserIdByName(req.body.username)
+    res.redirect(301, '/my_notes')
+  } else {
+    res.render('error', { error: 'SUCH USER EXIST' })
+  }
 })
 
 router.get('/delete_note/:id', async (req, res) => {

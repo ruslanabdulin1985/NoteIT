@@ -123,8 +123,18 @@ const update = (noteid, name, text, category) => {
   })
 }
 
-const createUsr = () => {
-
+const createUsr = (username, password) => {
+  return new Promise(resolve => {
+    const user  = {nameusers: username, passwordusers: password}
+    connection.query('INSERT INTO users SET ?', user, (error, results, fields) => {
+    if (error){
+      console.error(error)
+      resolve(false)
+    } else {
+      resolve(true)
+    }
+  })
+  })
 }
 
 /**
@@ -257,10 +267,14 @@ const getUserIdByName = (username) => {
   return new Promise(resolve => {
     connection.query(`SELECT idusers FROM users WHERE nameusers = '${username}'`, (error, results, fields) =>  {
       if (error) {
-        throw error
+        console.error(error)
+        resolve(null)
       } else {
-        console.log(results[0])
-        resolve(results[0].idusers)
+        if (results[0]){
+          resolve(results[0].idusers)
+        } else {
+          resolve(null)
+        }
       }
     })
   })

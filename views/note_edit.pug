@@ -9,7 +9,7 @@ block layout-content
       label text
       textarea(name="", id="codefield", cols="30", rows="10") #{body}
       label category
-      textarea(name="", id="categoryfield", cols="30", rows="10") #{body} 
+      input(name="", id="categoryfield" value=body) 
       p by #{author}
   div#control.centred
     button#savebtn(onclick="save('"+id+"')") save
