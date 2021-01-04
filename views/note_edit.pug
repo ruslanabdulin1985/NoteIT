@@ -21,7 +21,9 @@ block layout-content
       const url = window.location.toString()
       const category = categoryfield.value
 
-      if (id.length === 24){
+      console.log("ID "+id)
+      if (id!=='undefined'){
+        
         fetch('/edit_note', {
           method: 'POST', 
           headers: {
@@ -34,7 +36,7 @@ block layout-content
           if (data) {
             if (data.st === "OK") {
               window.alert("NOTE UPDATED!")
-              window.location = "/my_notes"
+              window.reload = "/my_notes"
             } else {
               window.alert("ERROR! NOTE NOT UPDATED")
             }

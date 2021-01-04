@@ -11,7 +11,6 @@ router.get('/', (req, res) => {
 
 router.get('/my_notes', async (req, res) => {
   if (req.session.user && req.session.userid) {
-    // console.log(req.session.userid)
     let notes = await db.getMyNotes(req.session.userid)
     res.render('my_notes', { title: 'Notes', notes: notes.reverse() })
   } else {
@@ -30,23 +29,27 @@ router.get('/shared_notes', async (req, res) => {
 
 router.post('/add_note', async (req, res) => {
   if (req.session.user) {
-    await db.createNote(req.body.name, req.body.text, req.session.userid, req.body.category)
+    const result = await db.createNote(req.body.name, req.body.text, req.session.userid, req.body.category)
     res.send({ st: 'OK' })
   } else { res.send({ st: 'FAIL' }) }
 })
 
 router.post('/edit_note', async (req, res) => {
   if (req.session.user) {
-    // console.log(req.body.id, req.body.name, req.body.code)
-    await db.update(req.body.id, req.body.name, req.body.code, req.session.user, [])
-    res.send({ st: 'OK' })
-  } else { res.send({ st: 'FAIL' }) }
+    const result = await db.update(req.body.id, req.body.name, req.body.text,  req.body.category )
+    if (result){
+      res.send({ st: 'OK' })
+    } else {
+      res.send({ st: 'FAIL' }) 
+    }
+  } else {
+    res.send({ st: 'FAIL' })
+  }
 })
 
 
 router.post('/share_apply', async (req, res) => {
   if (req.session.user) {
-    // console.log(req.body.idusers, req.body.idnotes)
     db.insertShare(req.body.idusers, req.body.idnotes)
     res.send({ st: 'OK' })
   } else { res.send({ st: 'FAIL' }) }
@@ -82,7 +85,7 @@ router.get('/delete_note/:id', async (req, res) => {
         res.render('error', ({error:"Could not delete the note"}))
       }
     } else {
-      res.render('error', ({error:"Permission denied"}))
+      res.render('error', ({error:"Permission denied - user is not the author"}))
     }
   } else {
     res.render('error', ({error:"Permission denied for guest user"}))
@@ -119,32 +122,36 @@ router.get('/login', async (req, res) => {
   res.render('login')
 })
 
-router.get('/get_current_user', async (req, res) => {
-  res.json({ user: 'RR' }) // req.session.user
-})
-
 router.get('/notes/share/:id', async (req, res) => {
   if (req.session.user){
-    const users = await db.getUsers()
-    const note = await db.find(req.params.id)
-    res.render('note_share', {users : users, note: note})
+    const users = await db.getUsersTheNoteIsNotSharedWith(req.params.id)
+    const note = await db.findNote(req.params.id)
+    const comusers = await db.getAllowedUsersForNoteId(req.params.id)
+    console.log('comusers', comusers)
+    res.render('note_share', {users : users, note: note, comusers: comusers})
   }
 })
 
 router.get('/note/edit/:id', async (req, res) => {
-  // const [snippetName, authorName, snippetBody] = ['', '', '']
-  if (req.session.user && req.params.id.length === 24) {
-    await db.find(req.params.id).then(r => {
-      if (r) {
-        const snippetId = r._id
-        const snippetName = r.name
-        const authorName = r.user
-        const snippetBody = r.body
-        res.render('note_edit', { title: 'snippet', id: snippetId, name: snippetName, author: authorName, body: snippetBody })
-      } else {
+  if (req.session.user) {
+    const userid = await db.getUserIdByName(req.session.user)
+    const note = await db.findNote(req.params.id)
+    let authornote = 0
+    if (note) {
+      authornote = note.authornotes
+    } else {
+      res.render('error', { error: 'Only authors can edit their notes' })
+    }
+
+    if (note && userid === authornote){
+        const noteid = note.idnotes
+        const notename = note.namenotes
+        const authorname = note.authornotes
+        const notebody = note.bodynotes
+        res.render('note_edit', { title: 'note', id: noteid, name: notename, author: authorname, body: notebody })
+    } else {
         res.render('error', { error: 'NOTE NOT FOUND' })
-      }
-    })
+    }
   } else { res.render('error', { error: 'EDITING FORBIDEN FOR NOT REGISTRED USERS' }) }
 })
 
@@ -159,26 +166,9 @@ router.get('/note/add', async (req, res) => {
 })
 
 router.get('/notes/:id', async (req, res) => {
-  // const [snippetName, authorName, snippetBody] = ['', '', '']
-
   const note = await db.findNote(req.params.id)
   if (note) {
     res.render('note', { title: 'note', name: note.namenotes, author: note.nameusers, text: note.bodynotes, id: note.idnotes, deleteStatus: 'YES', category: note.category })
-
-
-      // .then(r => {
-    //   if (r) {
-    //     let deleteStatus = 'NO'
-    //     if (r.user === req.session.user) {
-    //       deleteStatus = 'YES'
-    //     }
-    //     const snippetId = r._id
-    //     const snippetName = r.name
-    //     const authorName = r.user
-    //     const snippetBody = r.body
-    //   } else {
-    //   }
-    // })
   } else { res.render('error', { error: 'NOTE NOT FOUND' }) }
 })
 

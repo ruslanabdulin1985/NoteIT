@@ -17,13 +17,8 @@ block layout-content
             label#author by #{val.nameusers}
             label#hashtag ##{val.category}
             button#viewbtn(onclick='window.location="/notes/'+val.idnotes+'"') VIEW
-            button#editbtn(onclick='window.location="/notes/edit/'+val.idnotes+'"') EDIT
+            button#editbtn(onclick='window.location="/note/edit/'+val.idnotes+'"') EDIT
             button#sharebtn(onclick='window.location="/notes/share/'+val.idnotes+'"') SHARE
         else
-          p.singlerow
+          p.singlerow.red
             | There are no notes
-    //- each val in #{snippets}.length ? values : ['There are no values']
-    //- li= val
-    //- ul
-    //- each val in #{snippets}
-    //-   li= val

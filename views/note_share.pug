@@ -9,17 +9,28 @@ block layout-content
       label#author by #{note.nameusers}
       label#hashtag ##{note.category}
 
+    div.spacerhor
+    h1 ALREADY SHARED WITH:
+      each val in comusers
+        //- li= val.name
+        p.singlerow
+          label#name #{val.nameusers}
+      else
+        p.singlerow.red
+          | There are no users this note is shared with
+    
+    div.spacerhor
     h1 USERS TO SHARE WITH:
-    each val in users
-      //- li= val.name
-      p.singlerow
-        label#name #{val.nameusers}
-        //- a(href="/snippets/"+val.name) #{val.name} 
-        button#sharebtn(onclick="share('"+val.idusers +"','" +note.idnotes+"')") SHARE
-    else
-      p.singlerow
-        | There are no users to share with
- 
+      each val in users
+        //- li= val.name
+        p.singlerow
+          label#name #{val.nameusers}
+          //- a(href="/snippets/"+val.name) #{val.name} 
+          button#sharebtn(onclick="share('"+val.idusers +"','" +note.idnotes+"')") SHARE
+      else
+        p.singlerow.red
+          | There are no users to share with
+  
   script.
     const share = (user, note) => {
       //- console.log(user)
@@ -37,8 +48,9 @@ block layout-content
       .then(data => {
         if (data) {
           if (data.st === "OK") {
-            window.alert("NOTE SHARED!")
-            window.location = "/my_notes"
+            //- window.alert("NOTE SHARED!")
+            location.reload()
+            //- window.location = "/my_notes"
           } else {
             window.alert("ERROR! NOTE NOT SHARED")
           }

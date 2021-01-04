@@ -9,8 +9,21 @@ WHERE authornotes in(
     WHERE idgroups IN (
 		SELECT idgroups 
         FROM noteit.userstogroups 
-        WHERE idusers = '1'));
+        WHERE idusers = '1'))
+;
 ```
+
+#### INNER JOIN
+```mysql
+SELECT
+	users.nameusers,
+    permissions.permission
+FROM permissions
+INNER JOIN users ON permissions.idobject=users.idusers
+WHERE permissions.idnote = 10
+;
+```
+
 
 ### VIEW
 
