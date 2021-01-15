@@ -160,17 +160,12 @@ const getMyNotes = (userid) => {
  */
 const getSharedNotes = (userid) => {
   return new Promise(resolve => {
-    connection.query(`SELECT * 
-    FROM noteit.general_view
-    WHERE authornotes in(
-      SELECT idusers 
-        FROM noteit.userstogroups 
-        WHERE idgroups IN (
-        SELECT idgroups 
-            FROM noteit.userstogroups 
-            WHERE idusers = '${userid}'))
-    AND authornotes != ${userid}
-    ;`, (error, results, fields) =>  {
+    connection.query(`SELECT * FROM noteit.general_view
+    WHERE idnotes in(
+      SELECT idnote
+      FROM noteit.permissions 
+      WHERE idobject = ${userid}
+    )`, (error, results, fields) =>  {
       if (error) 
         throw error
       else{
