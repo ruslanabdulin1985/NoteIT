@@ -165,7 +165,7 @@ const getSharedNotes = (userid) => {
       SELECT idnote
       FROM noteit.permissions 
       WHERE idobject = ${userid}
-    )`, (error, results, fields) =>  {
+    ) GROUP BY nameusers`, (error, results, fields) =>  {
       if (error) 
         throw error
       else{
