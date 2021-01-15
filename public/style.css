@@ -89,6 +89,11 @@ pre {
   text-decoration: none;
   display: inline-block;
   background-color:orange;
+  opacity: 0.8;
+}
+
+.loginbtn:hover {
+  opacity: 1;
 }
 
 
@@ -117,7 +122,13 @@ pre {
   text-decoration: none;
   display: inline-block;
   background-color:green;
+  opacity: 0.8;
 }
+
+#addbtn:hover {
+  opacity: 1;
+}
+
 #codefield {
   width: 80%;
 }
@@ -131,6 +142,11 @@ pre {
   text-decoration: none;
   display: inline-block;
   background-color:green;
+  opacity: 0.8;
+}
+
+#savebtn {
+  opacity: 1;
 }
 
 #cancelbtn {
@@ -143,6 +159,11 @@ pre {
   text-decoration: none;
   display: inline-block;
   background-color:darkgoldenrod;
+  opacity: 0.8;
+}
+
+#cancelbtn:hover{
+  opacity: 1;
 }
 
 #deletebtn {
@@ -155,6 +176,11 @@ pre {
   text-decoration: none;
   display: inline-block;
   background-color:red;
+  opacity: 0.7;
+}
+
+#deletebt{
+  opacity: 1;
 }
 
 #viewbtn {
@@ -165,6 +191,11 @@ pre {
   text-decoration: none;
   display: inline-block;
   background-color:lightyellow;
+  opacity: 0.8;
+}
+
+#viewbtn:hover{
+  opacity:1;
 }
 
 pre {
@@ -194,6 +225,11 @@ sharebtn {
   text-decoration: none;
   display: inline-block;
   background-color:lightblue;
+  opacity: 0.8;
+}
+
+#editbtn:hover {
+  opacity: 1;
 }
 
 .padded {
